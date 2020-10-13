@@ -10,6 +10,7 @@
   "dependencies": {
     "@emotion/core": "^10.0.35",
     "@emotion/styled": "^10.0.27",
+    "framer-motion": "^2.9.1",
     "next": "9.5.5",
     "react": "16.13.1",
     "react-dom": "16.13.1",

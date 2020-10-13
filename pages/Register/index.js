@@ -1,6 +1,8 @@
 import 'typeface-montserrat';
 import 'typeface-raleway';
 import styled from '@emotion/styled';
+import { useState } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 
 const PageContainer = styled.div`
   display: grid;
@@ -42,7 +44,7 @@ const RegisterFormInput = styled.input`
   }
 `;
 
-const RegisterFormPrimaryButton = styled.button`
+const RegisterFormPrimaryButton = styled(motion.button)`
   padding: 1rem;
   margin-top: 2rem;
   border: none;
@@ -53,7 +55,7 @@ const RegisterFormPrimaryButton = styled.button`
   font-size: 18px;
 `;
 
-const RegisterFormSecondaryButton = styled.button`
+const RegisterFormSecondaryButton = styled(motion.button)`
   padding: 1rem;
   margin-top: 1rem;
   border-style: solid;
@@ -94,17 +96,70 @@ const MainFooterLink = styled.a`
 
 const AsideContainer = styled.aside`
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
   background-color: #6b46c1;
 `;
 
-const AsideImage = styled.img`
-  height: 400px;
+const AsideImage = styled(motion.img)`
+  height: 100%;
   width: 400px;
 `;
 
+const AsideList = styled.ol`
+  margin-top: auto;
+  padding-left: 0;
+  margin-bottom: 1rem;
+  text-align: center;
+  list-style: none;
+`;
+
+const AsideListItem = styled(motion.li)`
+  display: inline-block;
+  width: 1rem;
+  height: 1rem;
+  margin: 0 1rem;
+  text-indent: -999px;
+  cursor: pointer;
+  background-color: ${props => (props.active ? '#ffffff' : 'rgba(0, 0, 0, 0)')};
+  border: 1px solid #fff;
+  border-radius: 10px;
+`;
+
+const variants = {
+  enter: () => {
+    return {
+      type: 'spring',
+      opacity: 0,
+      scale: 0,
+      duration: 0.4
+    };
+  },
+  center: {
+    type: 'spring',
+    opacity: 1,
+    scale: 1,
+    duration: 0.4
+  },
+  exit: () => {
+    return {
+      opacity: 0,
+      x: '0%',
+      duration: 0.6
+    };
+  }
+};
+
+const imageSrcs = [
+  '/undraw_wizard.svg',
+  '/undraw_mobile.svg',
+  '/undraw_happy.svg'
+];
+
 export const Register = () => {
+  const [page, setPage] = useState(0);
+
   return (
     <PageContainer>
       <MainContainer>
@@ -112,10 +167,26 @@ export const Register = () => {
           <RegisterFormHeader>Create an account</RegisterFormHeader>
           <RegisterFormInput placeholder="Enter your email" />
           <RegisterFormInput placeholder="Enter your password" />
-          <RegisterFormPrimaryButton type="submit" onClick={() => {}}>
+          <RegisterFormPrimaryButton
+            type="submit"
+            onClick={() => {}}
+            whileHover={{
+              scale: 1.05,
+              transition: { duration: 0.4 }
+            }}
+            whileTap={{ scale: 0.95 }}
+          >
             Sign Up
           </RegisterFormPrimaryButton>
-          <RegisterFormSecondaryButton type="button">
+          <RegisterFormSecondaryButton
+            type="button"
+            onClick={() => setPage((page + 1) % 3)}
+            whileHover={{
+              scale: 1.05,
+              transition: { duration: 0.4 }
+            }}
+            whileTap={{ scale: 0.95 }}
+          >
             Sign up with Google
           </RegisterFormSecondaryButton>
           <RegisterFormFooterText>
@@ -131,7 +202,48 @@ export const Register = () => {
         </MainFooterContainer>
       </MainContainer>
       <AsideContainer>
-        <AsideImage src="/undraw_wizard.svg" alt="UI Wizard" />
+        <AnimatePresence initial={false} exitBeforeEnter>
+          <AsideImage
+            key={page}
+            src={imageSrcs[page]}
+            variants={variants}
+            initial="enter"
+            animate="center"
+            exit="exit"
+            transition={{
+              opacity: { duration: 0.6 }
+            }}
+          />
+        </AnimatePresence>
+        <AsideList>
+          <AsideListItem
+            whileHover={{
+              scale: 1.2,
+              transition: { duration: 0.4 }
+            }}
+            whileTap={{ scale: 0.9 }}
+            active={page === 0}
+            onClick={() => setPage(0)}
+          />
+          <AsideListItem
+            whileHover={{
+              scale: 1.2,
+              transition: { duration: 0.4 }
+            }}
+            whileTap={{ scale: 0.9 }}
+            active={page === 1}
+            onClick={() => setPage(1)}
+          />
+          <AsideListItem
+            whileHover={{
+              scale: 1.2,
+              transition: { duration: 0.4 }
+            }}
+            whileTap={{ scale: 0.9 }}
+            active={page === 2}
+            onClick={() => setPage(2)}
+          />
+        </AsideList>
       </AsideContainer>
     </PageContainer>
   );
